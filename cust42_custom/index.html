@@ -284,7 +284,12 @@
 <body>
 
     <div id="particles"></div>
-    <audio id="bgMusic" src="music.mp3" loop></audio>
+    <audio
+        id="bgMusic"
+        src="lagu.mp3"
+        loop
+        preload="auto">
+    </audio>
 
     <!-- Overlay Foto -->
     <div id="photoOverlay" class="photo-overlay" onclick="closePhoto()">
@@ -300,7 +305,9 @@
             <div class="tenor-gif-embed" data-postid="511329709015824525" data-width="100%"></div>
             <h1 class="text-2xl font-bold text-rose-500 mb-2 mt-4">Will you forgive me, love?</h1>
             <div class="flex justify-center gap-6 mt-8">
-                <button onclick="showPage('pageLove')" class="bg-rose-500 text-white px-10 py-3 rounded-2xl font-bold shadow-lg">YES!</button>
+                <button onclick="playAndContinue()" class="bg-rose-500 text-white px-10 py-3 rounded-2xl font-bold shadow-lg">
+                    YES!
+                </button>
                 <button id="noBtn" onmouseenter="dodgeBtn()" onclick="showPage('pageSad')" class="bg-gray-800 text-white px-10 py-3 rounded-2xl font-bold shadow-lg">NO</button>
             </div>
         </div>
@@ -493,8 +500,6 @@
             gsap.to("#seal", { scale: 0, opacity: 0 });
             setTimeout(() => { 
                 showPage('pageLetter'); 
-                const music = document.getElementById('bgMusic');
-                if(music) music.play().catch(() => {});
             }, 800);
         }
 
@@ -651,6 +656,48 @@
     btnToEnvelope.addEventListener("click", () => {
         showPage("pageEnvelope");
     });
+
+    const bgMusic = document.getElementById("bgMusic");
+
+    bgMusic.volume = 0;
+
+    function startMusicSmooth() {
+
+        bgMusic.play().then(() => {
+
+            let volume = 0;
+            bgMusic.volume = 0;
+
+            const fade = setInterval(() => {
+
+                volume += 0.02;
+
+                if (volume >= 0.25) {
+                    volume = 0.25;
+                    clearInterval(fade);
+                }
+
+                bgMusic.volume = volume;
+
+            }, 120);
+
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    }
+
+    let musicStarted = false;
+
+    function playAndContinue() {
+
+        if (!musicStarted) {
+            musicStarted = true;
+            startMusicSmooth();
+        }
+
+        showPage("pageLove");
+    }
     </script>
 </body>
 </html>
