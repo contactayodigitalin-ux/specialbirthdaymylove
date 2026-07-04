@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry, azan juliansyah ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #fff1f2; margin: 0; overflow: hidden; color: #4b5563; }
+        .font-handwriting { font-family: 'Dancing Script', cursive; }
+        
+        .page-container { display: none; min-height: 100vh; width: 100%; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 1.5rem; position: relative; z-index: 10; overflow-y: auto; }
+        .active { display: flex; animation: fadeIn 0.6s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .particle { position: absolute; top: -50px; animation: fall linear forwards; }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 2px solid white; border-radius: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        /* Envelope */
+        .envelope-wrapper { perspective: 1000px; cursor: pointer; transform: scale(0.9); }
+        .envelope { position: relative; width: 300px; height: 200px; background: #fda4af; border-radius: 0 0 10px 10px; }
+        .flap { position: absolute; top: 0; width: 0; height: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 110px solid #f43f5e; transform-origin: top; z-index: 30; transition: transform 0.5s ease; }
+        .open .flap { transform: rotateX(180deg); }
+
+        /* Letter */
+        .letter-paper { background: #fffcf0; padding: 2.5rem; border-radius: 1rem; border: 4px solid #f8d7da; position: relative; max-width: 500px; width: 95%; box-shadow: 0 15px 40px rgba(0,0,0,0.1); }
+        
+        /* Puzzle */
+        .puzzle-board { width: 300px; height: 300px; position: relative; background: rgba(255, 255, 255, 0.3); border-radius: 20px; border: 2px dashed #fda4af; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); margin: 20px auto; }
+        .puzzle-piece { width: 100px; height: 100px; position: absolute; cursor: grab; border-radius: 8px; border: 1px solid white; background-size: 300px 300px; z-index: 100; touch-action: none; }
+        .puzzle-slot { width: 100%; height: 100%; border: 1px solid rgba(253, 164, 175, 0.1); }
+
+        /* Gallery Love */
+        .love-icon { font-size: 4rem; cursor: pointer; transition: 0.3s; animation: beat 0.8s infinite alternate; }
+        @keyframes beat { from { transform: scale(1); } to { transform: scale(1.1); } }
+        .photo-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .photo-card { background: white; padding: 15px; border-radius: 15px; width: 320px; cursor: pointer; }
+        .photo-card img { width: 100%; border-radius: 8px; }
+
+        .cat-container {
+            position: relative;
+            width: 260px;
+            height: 240px;
+            cursor: pointer;
+            margin: 0 auto;
+        }
+        .cat-body {
+            width: 170px;
+            height: 130px;
+            background: #ffffff;
+            border-radius: 90px 90px 70px 80px;
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            box-shadow:
+            inset -15px -15px 20px rgba(230, 230, 230, 0.8),
+            0 10px 25px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        /* Aksen warna belang di punggung kucing */
+        .cat-back-patch {
+            position: absolute;
+            width: 80px;
+            height: 60px;
+            background: #fbc531; /* Warna orange lembut */
+            top: 0;
+            right: 10px;
+            border-radius: 50% 30% 50% 40%;
+            opacity: 0.85;
+        }
+        .cat-paws {
+            position: absolute;
+            bottom: 0;
+            left: 25px;
+            display: flex;
+            gap: 15px;
+        }
+        .paw {
+            width: 25px;
+            height: 20px;
+            background: #fff;
+            border-radius: 10px 10px 5px 5px;
+            box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.05);
+        }
+        .cat-head {
+            width: 125px;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            bottom: 85px;
+            left: 25px;
+            box-shadow:
+            inset -5px -5px 12px rgba(220, 220, 220, 0.6),
+            0 8px 20px rgba(0, 0, 0, 0.05);
+            z-index: 2;
+            transition: transform 0.2s;
+        }
+        .ear {
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-bottom: 30px solid #fff;
+            position: absolute;
+            top: -12px;
+            filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.03));
+        }
+        .ear.left {
+            left: 8px;
+            transform: rotate(-20deg);
+        }
+        .ear.right {
+            right: 8px;
+            transform: rotate(20deg);
+        }
+        .ear-inner {
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 18px solid #ffccd5;
+            position: absolute;
+            bottom: -30px;
+            left: -10px;
+            border-radius: 3px;
+        }
+        .cat-eyes {
+            display: flex;
+            justify-content: space-between;
+            width: 70px;
+            position: absolute;
+            top: 45px;
+            left: 28px;
+            z-index: 3;
+        }
+        .eye {
+            width: 14px;
+            height: 4px;
+            background-color: #4a373d;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        /* Efek mata menutup senang saat dielus bergantian */
+        .cat-container:active .eye {
+            height: 10px;
+            border-radius: 50%;
+            background-color: #2f3640;
+        }
+        /* Hidung dan Mulut */
+        .cat-snout {
+            position: absolute;
+            top: 52px;
+            left: 54px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cat-nose {
+            width: 8px;
+            height: 5px;
+            background-color: #ffb7b2;
+            border-radius: 50% 50% 60% 60%;
+        }
+        .cat-mouth {
+            width: 12px;
+            height: 6px;
+            border: 1.5px solid #4a373d;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            margin-top: 1px;
+        }
+        /* Kumis Realistis */
+        .whiskers {
+            position: absolute;
+            top: 58px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .whiskers.left {
+            left: -12px;
+            transform: rotate(-5deg);
+        }
+        .whiskers.right {
+            right: -12px;
+            transform: rotate(5deg);
+        }
+        .whiskers span {
+            width: 25px;
+            height: 1px;
+            background: rgba(74, 55, 61, 0.2);
+            display: block;
+        }
+        /* Ekor bergerak santai */
+        .cat-tail {
+            width: 22px;
+            height: 90px;
+            background: #fbc531;
+            position: absolute;
+            bottom: 45px;
+            right: 35px;
+            border-radius: 15px;
+            transform-origin: bottom center;
+            transform: rotate(25deg);
+            animation: tailWag 3s ease-in-out infinite alternate;
+            z-index: 0;
+            box-shadow: inset -4px 0 8px rgba(0, 0, 0, 0.05);
+        }
+        .cat-cushion {
+            width: 240px;
+            height: 25px;
+            background-color: #f5d3d1;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 15px;
+            left: 10px;
+            z-index: -1;
+            box-shadow: 0 5px 15px rgba(245, 183, 177, 0.3);
+        }
+        .heart-pop {
+            position: absolute;
+            color: #ff6b81;
+            font-size: 26px;
+            opacity: 0;
+            z-index: 10;
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        #heart-spawner{
+            position:absolute;
+            inset:0;
+            overflow:visible;
+            pointer-events:none;
+            z-index:999;
+        }
+
+        @keyframes floatUp{
+            0%{
+                transform:translateY(0) scale(.5);
+                opacity:0;
+            }
+
+            20%{
+                opacity:1;
+            }
+
+            100%{
+                transform:translateY(-120px) translateX(var(--x)) scale(1.8);
+                opacity:0;
+            }
+        }
+
+        .heart-pop{
+            position:absolute;
+            font-size:28px;
+            animation:floatUp 1.5s ease-out forwards;
+            user-select:none;
+            pointer-events:none;
+        }
+
+        /* Tambahkan animasi ayunan ekor di bagian bawah sebaris @keyframes lainnya */
+        @keyframes tailWag {
+            0% {
+            transform: rotate(15deg);
+            }
+            100% {
+            transform: rotate(35deg);
+            }
+        }
+
+        @keyframes shake { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(10px,-10px); } 50% { transform: translate(-10px,10px); } 75% { transform: translate(10px,10px); } }
+        .shake-active { animation: shake 0.2s infinite; }
+    </style>
+</head>
+<body>
+
+    <div id="particles"></div>
+    <audio id="bgMusic" src="music.mp3" loop></audio>
+
+    <!-- Overlay Foto -->
+    <div id="photoOverlay" class="photo-overlay" onclick="closePhoto()">
+        <div class="photo-card" id="activePhotoCard">
+            <img id="displayImg" src="" alt="memory">
+            <p id="displayCaption" class="font-handwriting text-2xl text-rose-600 mt-4 text-center"></p>
+        </div>
+    </div>
+
+    <!-- 1. QUESTION -->
+    <div id="page1" class="page-container active">
+        <div class="glass p-10 max-w-sm w-full">
+            <div class="tenor-gif-embed" data-postid="511329709015824525" data-width="100%"></div>
+            <h1 class="text-2xl font-bold text-rose-500 mb-2 mt-4">Will you forgive me, love?</h1>
+            <div class="flex justify-center gap-6 mt-8">
+                <button onclick="showPage('pageLove')" class="bg-rose-500 text-white px-10 py-3 rounded-2xl font-bold shadow-lg">YES!</button>
+                <button id="noBtn" onmouseenter="dodgeBtn()" onclick="showPage('pageSad')" class="bg-gray-800 text-white px-10 py-3 rounded-2xl font-bold shadow-lg">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. SAD -->
+    <div id="pageSad" class="page-container">
+        <div class="glass p-10 max-w-sm w-full">
+            <div class="tenor-gif-embed" data-postid="12782870542608816906" data-width="100%"></div>
+            <h1 class="text-2xl font-bold text-rose-600 mb-6 mt-4">Beneran nih? 🥺</h1>
+            <button onclick="showPage('page1')" class="bg-rose-500 text-white px-10 py-3 rounded-full font-bold shadow-lg">Maafin Deh</button>
+        </div>
+    </div>
+
+    <!-- 3. YEAY -->
+    <div id="pageLove" class="page-container">
+        <div class="glass p-10 max-w-sm w-full">
+            <div class="tenor-gif-embed" data-postid="24985324" data-width="100%"></div>
+            <h1 class="text-2xl font-bold text-rose-500 mb-2 mt-4 uppercase">Yeayyy! ❤️</h1>
+            <button onclick="showPage('pageCat')" class="bg-rose-500 text-white px-10 py-3 rounded-2xl font-bold shadow-lg mt-6">See My Letter 💌</button>
+        </div>
+    </div>
+
+    <!-- 3.5 CAT -->
+    <div id="pageCat" class="page-container">
+
+        <div class="glass p-8 max-w-md w-full">
+
+            <h1 class="text-3xl font-bold text-rose-500 mb-3">
+                Elus dulu kucingnyaa 🐱
+            </h1>
+
+            <p id="cat-status"
+            class="text-gray-500 text-sm mb-6 transition-all">
+                dia masih malu-malu...
+            </p>
+
+            <div class="cat-container" id="cat-interactive">
+                <div class="cat-cushion"></div>
+
+                <div class="cat-tail"></div>
+
+                <div class="cat-body">
+                    <div class="cat-back-patch"></div>
+
+                    <div class="cat-paws">
+                        <div class="paw left"></div>
+                        <div class="paw right"></div>
+                    </div>
+                </div>
+
+                <div class="cat-head">
+
+                    <div class="ear left">
+                        <div class="ear-inner"></div>
+                    </div>
+
+                    <div class="ear right">
+                        <div class="ear-inner"></div>
+                    </div>
+
+                    <!-- BELANG WAJAH -->
+                    <div class="face-patch"></div>
+
+                    <div class="cat-eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+
+                    <div class="cat-snout">
+                        <div class="cat-nose"></div>
+                        <div class="cat-mouth"></div>
+                    </div>
+
+                    <div class="whiskers left">
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="whiskers right">
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                </div>
+
+                <div id="heart-spawner"></div>
+            </div>
+
+            <button
+            id="btnToEnvelope"
+            class="hidden bg-rose-500 text-white px-8 py-3 rounded-full mt-6 font-bold">
+                Buka Kadonya 🎁
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- 4. ENVELOPE -->
+    <div id="pageEnvelope" class="page-container">
+        <h1 class="text-xl font-bold text-rose-600 mb-8 uppercase tracking-widest">Klik Amplopnya Sayang ❤️</h1>
+        <div class="envelope-wrapper" onclick="openEnvelope()">
+            <div id="mainEnvelope" class="envelope flex items-center justify-center">
+                <div class="flap"></div>
+                <div id="seal" class="absolute z-40 bg-white rounded-full p-3 shadow-lg"><span class="text-rose-500 text-2xl">❤️</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. LONG LETTER -->
+    <div id="pageLetter" class="page-container">
+        <div class="letter-paper">
+            <h1 class="font-handwriting text-3xl text-rose-700 mb-6 border-b-2 border-rose-100 pb-2">I Love U</h1>
+            <div class="max-h-[40vh] overflow-y-auto pr-2 text-rose-800 text-sm leading-relaxed text-justify space-y-4">
+                <p>happy birthday sayangku❤️
+                    first of all, i just wanna say thank you. thank you for being you, for being patient, kind, and always making me feel loved.
+                </p>
+                <p>bersyukur banget bisa jalan bareng kamu sejauh ini. y'r not just my boyfriend, y'r my best friend, my comfort zone, my safe place. ngga pernah nyangka bisa sm km yang bisa ngerti aku sebaik baiknya, ntah kl sm org lain.</p>
+                <p>i'm sorry, i'm so sorry. aku tahu kita tidak selalu sempurna, dan kadang mungkin dunia terasa berat. banyak hal yg uda kita lewatin dr mulai pahit, manis dan asinnya. ntah brp banyak kata maaf, saling mengalah sampai membujuk. tapi aku bersyukur, kita bisa lewatin semua bareng bareng.</p>
+                <p>di umurmu yang baru ini, i hope all your dreams start coming true one by one. semoga kamu selalu diberi kesehatan, rezeki yang lancar, dan hati yang tenang dalam menghadapi apapun. and i hope, in every step u take, i can still be right beside u, cheering u on, loving you endlessly.</p>
+                <p>happy birthday again, love. let's keep growing, learning, and loving together. i love you, always.</p>
+            </div>
+            <button onclick="showPage('pageGame')" class="mt-8 bg-rose-500 text-white w-full py-3 rounded-full text-sm font-bold shadow-lg animate-bounce">Play a Game? 🧩</button>
+        </div>
+    </div>
+
+    <!-- 6. PUZZLE -->
+    <div id="pageGame" class="page-container">
+        <h1 class="font-handwriting text-4xl text-rose-700 mb-2">Susun Puzzle-nya! ❤️</h1>
+        <div class="puzzle-board" id="board">
+            <div class="puzzle-slot" data-idx="0"></div><div class="puzzle-slot" data-idx="1"></div><div class="puzzle-slot" data-idx="2"></div>
+            <div class="puzzle-slot" data-idx="3"></div><div class="puzzle-slot" data-idx="4"></div><div class="puzzle-slot" data-idx="5"></div>
+            <div class="puzzle-slot" data-idx="6"></div><div class="puzzle-slot" data-idx="7"></div><div class="puzzle-slot" data-idx="8"></div>
+        </div>
+        <div id="pieces-container" class="flex flex-wrap justify-center gap-2 mt-8 max-w-md h-32 relative"></div>
+        <button id="btnNextPhoto" onclick="showPage('pagePhotos')" class="hidden bg-rose-500 text-white px-10 py-3 rounded-full font-bold shadow-lg">Lanjut Liata Foto 📸</button>
+    </div>
+
+    <!-- 7. GALLERY 3 LOVE -->
+    <div id="pagePhotos" class="page-container">
+        <h1 class="font-handwriting text-4xl text-rose-700 mb-2">Our Memories</h1>
+        <div class="flex justify-center gap-6 mt-12">
+            <div class="love-icon" onclick="openPhoto('pict1.jpeg', 'Momen indah bareng kamu ❤️')">💖</div>
+            <div class="love-icon" onclick="openPhoto('pict2.jpeg', 'Kangen waktu ini... 💝')">💝</div>
+            <div class="love-icon" onclick="openPhoto('pict3.jpeg', 'I love you! 💕')">💕</div>
+        </div>
+        <button onclick="showPage('pageThankYou')" class="mt-20 bg-rose-500 text-white px-10 py-3 rounded-full font-bold shadow-lg">Halaman Terakhir ➔</button>
+    </div>
+
+    <!-- 8. FINAL PAGE -->
+    <div id="pageThankYou" class="page-container">
+        <div class="glass p-8 max-w-sm w-full mx-4">
+            <img src="pict4.jpeg" class="w-full h-48 object-cover rounded-xl mb-4 shadow-md" alt="Kita">
+            <h1 class="text-xl font-bold text-rose-500 mb-4 uppercase">Thank You, Love! ❤️</h1>
+            <p class="text-sm text-slate-500 italic mb-8">"I promise to love you better every day. 🥺💌"</p>
+            <button onclick="location.reload()" class="bg-rose-500 text-white w-full py-3 rounded-full font-bold">RESTART 🔄</button>
+        </div>
+    </div>
+
+    <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    <script>
+        gsap.registerPlugin(Draggable);
+        let isSad = false;
+        let solvedPieces = 0;
+
+        function dodgeBtn() {
+            const btn = document.getElementById('noBtn');
+            btn.classList.add('shake-active');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 40);
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px'; btn.style.top = y + 'px';
+            setTimeout(() => btn.classList.remove('shake-active'), 500);
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            isSad = (id === 'pageSad');
+            if(id === 'pageLetter' || id === 'pageThankYou') {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            }
+            if(id === 'pageGame') initPuzzle();
+        }
+
+        function openEnvelope() {
+            const env = document.getElementById('mainEnvelope');
+            env.classList.add('open');
+            gsap.to("#seal", { scale: 0, opacity: 0 });
+            setTimeout(() => { 
+                showPage('pageLetter'); 
+                const music = document.getElementById('bgMusic');
+                if(music) music.play().catch(() => {});
+            }, 800);
+        }
+
+        function initPuzzle() {
+            const container = document.getElementById('pieces-container');
+            const slots = document.querySelectorAll('.puzzle-slot');
+            container.innerHTML = '';
+            solvedPieces = 0;
+            const pieceOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+            const shuffled = [...pieceOrder].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach((val) => {
+                const piece = document.createElement('div');
+                piece.className = 'puzzle-piece';
+                piece.style.backgroundImage = "url('puzzle.jpeg')";
+                const row = Math.floor(val / 3);
+                const col = val % 3;
+                piece.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+                piece.dataset.correctIdx = val;
+                container.appendChild(piece);
+
+                Draggable.create(piece, {
+                    onRelease: function() {
+                        let snapped = false;
+                        slots.forEach(slot => {
+                            const rect1 = piece.getBoundingClientRect();
+                            const rect2 = slot.getBoundingClientRect();
+                            if (Math.abs(rect1.left - rect2.left) < 40 && Math.abs(rect1.top - rect2.top) < 40 && slot.dataset.idx == piece.dataset.correctIdx) {
+                                piece.style.pointerEvents = 'none';
+                                gsap.to(piece, { duration: 0.3, x: 0, y: 0, left: rect2.left, top: rect2.top, position: 'fixed' });
+                                solvedPieces++;
+                                snapped = true;
+                                if (solvedPieces === 9) {
+                                    confetti({ particleCount: 100 });
+                                    document.getElementById('btnNextPhoto').classList.remove('hidden');
+                                }
+                            }
+                        });
+                        if (!snapped) gsap.to(piece, { x: 0, y: 0, duration: 0.3 });
+                    }
+                });
+            });
+        }
+
+        function openPhoto(src, caption) {
+            const overlay = document.getElementById('photoOverlay');
+            const card = document.getElementById('activePhotoCard');
+            document.getElementById('displayImg').src = src;
+            document.getElementById('displayCaption').innerText = caption;
+            overlay.style.display = 'flex';
+            gsap.set(card, { opacity: 1, scale: 1 });
+            gsap.from(card, { scale: 0.8, opacity: 0, duration: 0.4, ease: "back.out" });
+        }
+
+        function closePhoto() {
+            gsap.to("#activePhotoCard", { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                document.getElementById('photoOverlay').style.display = 'none';
+            }});
+        }
+
+        function createParticle() {
+            const container = document.getElementById('particles');
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.innerText = isSad ? '😭' : '💖';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            container.appendChild(p);
+            setTimeout(() => p.remove(), 5000);
+        }
+        setInterval(createParticle, 350);
+
+              // 2. Interaksi Kucing (Desktop mousemove & Mobile touchmove)
+      const catInteractive = document.getElementById("cat-interactive");
+      const catStatus = document.getElementById("cat-status");
+      const btnToEnvelope = document.getElementById("btnToEnvelope");
+      const heartSpawner = document.getElementById("heart-spawner");
+      let elusCount = 0;
+      let lastStroke = 0;
+      const strokeCooldown = 40; // sebelumnya 60
+
+    function triggerHeart(){
+
+        const heart=document.createElement("div");
+
+        heart.className="heart-pop";
+
+        heart.innerHTML=Math.random()>0.5?"❤️":"💖";
+
+        heart.style.left=(90+Math.random()*70)+"px";
+
+        heart.style.top=(20+Math.random()*40)+"px";
+
+        heart.style.setProperty(
+            "--x",
+            (Math.random()*80-40)+"px"
+        );
+
+        heartSpawner.appendChild(heart);
+
+        setTimeout(()=>{
+            heart.remove();
+        },1500);
+
+    }
+
+      function handleElus() {
+        const now = Date.now();
+
+        // supaya mousemove tidak nambah terlalu cepat
+        if (now - lastStroke < strokeCooldown) return;
+        lastStroke = now;
+
+        elusCount++;
+
+        if(elusCount%3==0){
+            for(let i=0;i<3;i++){
+
+                setTimeout(()=>{
+                    triggerHeart();
+                },i*80);
+
+            }
+        }
+
+        if (elusCount === 40) {
+          catStatus.innerText =
+            "dia bangun... terus slow blink 🥹 itu tandanya dia mulai percaya sama kamu";
+        } else if (elusCount === 90) {
+          catStatus.innerText =
+            "sekarang dia udah nyaman banget... terus elus pelan yaa 🤍";
+        } else if (elusCount >= 140) {
+          catStatus.innerText =
+            "yeayy kadonaa uda terbukaa 🥹 makasii yaa sayang, i love uu ❤️";
+
+          btnToEnvelope.classList.remove("hidden");
+        }
+      }
+
+      function updateCatStatus(text) {
+        catStatus.classList.remove("show");
+
+        setTimeout(() => {
+          catStatus.innerText = text;
+          catStatus.classList.add("show");
+        }, 80);
+      }
+
+      catInteractive.addEventListener("mousemove", handleElus);
+      catInteractive.addEventListener("touchmove", (e) => {
+        handleElus();
+      });
+
+    btnToEnvelope.addEventListener("click", () => {
+        showPage("pageEnvelope");
+    });
+    </script>
+</body>
+</html>
